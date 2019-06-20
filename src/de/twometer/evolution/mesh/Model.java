@@ -1,4 +1,4 @@
-package de.twometer.evolution;
+package de.twometer.evolution.mesh;
 
 import static org.lwjgl.opengl.GL30.*;
 

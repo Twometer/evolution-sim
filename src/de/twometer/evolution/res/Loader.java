@@ -1,4 +1,4 @@
-package de.twometer.evolution;
+package de.twometer.evolution.res;
 
 import java.io.IOException;
 

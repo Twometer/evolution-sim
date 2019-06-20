@@ -1,4 +1,4 @@
-package de.twometer.evolution;
+package de.twometer.evolution.world;
 
 public interface Tile {
     byte SAND = 0;

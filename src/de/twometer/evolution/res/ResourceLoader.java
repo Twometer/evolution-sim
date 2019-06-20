@@ -1,4 +1,4 @@
-package de.twometer.evolution;
+package de.twometer.evolution.res;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -20,7 +20,7 @@ public class ResourceLoader {
      * @return The contents of the file
      * @throws IOException Will be thrown if the file does not exist, or the reading fails for any other reason.
      */
-    public static String loadString(String path) throws IOException {
+    static String loadString(String path) throws IOException {
         BufferedReader reader = new BufferedReader(openReader(path));
         StringBuilder builder = new StringBuilder();
         String line;
@@ -36,7 +36,7 @@ public class ResourceLoader {
      * @return A reader on the content stream of the file
      * @throws IOException Will be thrown if the file does not exist
      */
-    public static InputStreamReader openReader(String path) throws IOException {
+    private static InputStreamReader openReader(String path) throws IOException {
         return new InputStreamReader(openStream(path), StandardCharsets.UTF_8);
     }
 

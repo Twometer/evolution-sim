@@ -1,4 +1,4 @@
-package de.twometer.evolution;
+package de.twometer.evolution.gl;
 
 import org.joml.Matrix4f;
 import org.joml.Vector2f;

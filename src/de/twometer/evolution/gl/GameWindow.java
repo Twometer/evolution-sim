@@ -1,4 +1,4 @@
-package de.twometer.evolution;
+package de.twometer.evolution.gl;
 
 import org.joml.Vector2f;
 import org.lwjgl.glfw.GLFWErrorCallback;
@@ -92,6 +92,14 @@ public class GameWindow implements ILifecycle {
      */
     public boolean isKeyPressed(int key) {
         return glfwGetKey(window, key) == GLFW_PRESS;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
     }
 
     public boolean isCloseRequested() {

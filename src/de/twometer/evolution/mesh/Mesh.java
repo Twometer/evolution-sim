@@ -1,4 +1,4 @@
-package de.twometer.evolution;
+package de.twometer.evolution.mesh;
 
 import org.lwjgl.system.MemoryUtil;
 
@@ -14,19 +14,19 @@ public class Mesh {
 
     private int colorCount;
 
-    public Mesh(int vertexCapacity) {
+    Mesh(int vertexCapacity) {
         vertices = MemoryUtil.memAllocFloat(vertexCapacity * 3);
         colors = MemoryUtil.memAllocFloat(vertexCapacity * 3);
     }
 
-    public void putVertex(float x, float y, float z) {
+    void putVertex(float x, float y, float z) {
         vertices.put(x);
         vertices.put(y);
         vertices.put(z);
         vertexCount++;
     }
 
-    public void putColor(float r, float g, float b) {
+    void putColor(float r, float g, float b) {
         colors.put(r);
         colors.put(g);
         colors.put(b);

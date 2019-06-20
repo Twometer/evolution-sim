@@ -1,6 +1,6 @@
 package de.twometer.evolution.shaders;
 
-import de.twometer.evolution.Loader;
+import de.twometer.evolution.res.Loader;
 
 import static org.lwjgl.opengl.GL20.*;
 
@@ -35,7 +35,7 @@ public abstract class Shader {
     /**
      * Unbinds the shader program
      */
-    public final void unbind() {
+    private void unbind() {
         glUseProgram(0);
     }
 

@@ -1,5 +1,8 @@
-package de.twometer.evolution;
+package de.twometer.evolution.world;
 
+import de.twometer.evolution.mesh.CubeFace;
+import de.twometer.evolution.mesh.CubeMesh;
+import de.twometer.evolution.mesh.Model;
 import org.joml.Vector3f;
 
 import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
@@ -56,10 +59,7 @@ public class World {
             return true;
 
         // Render borders to water
-        if (getTile(mx, mz) != Tile.WATER && getTile(x, z) == Tile.WATER)
-            return true;
-
-        return false;
+        return getTile(mx, mz) != Tile.WATER && getTile(x, z) == Tile.WATER;
     }
 
     private byte getTile(int x, int z) {
