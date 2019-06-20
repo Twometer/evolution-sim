@@ -37,7 +37,7 @@ public class World {
                 Vector3f colorA = new Vector3f(color).mul(0.6f);
                 Vector3f colorB = new Vector3f(color).mul(0.3f);
 
-                float height = getTile(x, z) == Tile.WATER ? 0.6f : 1.0f;
+                float height = getTile(x, z) == Tile.WATER ? 0.75f : 1.0f;
 
                 if (shouldRenderFace(x, z, x + 1, z)) mesh.putFace(pos, colorA, CubeFace.PosX, height);
                 if (shouldRenderFace(x, z, x, z + 1)) mesh.putFace(pos, colorB, CubeFace.PosZ, height);
