@@ -33,7 +33,7 @@ public class MasterRenderer implements ILifecycle {
         camera = new Camera();
         mainShader = new MainShader();
 
-        world = new World(96, 96);
+        world = new World(72, 72);
 
         WorldGenerator generator = new WorldGenerator(world);
         generator.generate();
@@ -52,7 +52,7 @@ public class MasterRenderer implements ILifecycle {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
             mainShader.bind();
-            mainShader.setModelMatrix(new Matrix4f().scale(0.5f));
+            mainShader.setModelMatrix(new Matrix4f().scale(1.0f));
             mainShader.setViewMatrix(camera.calcViewMatrix());
             mainShader.setProjectionMatrix(new Matrix4f().perspective((float) Math.toRadians(70f), (float) gameWindow.getWidth() / gameWindow.getHeight(), 0.1f, 500.0f));
 
