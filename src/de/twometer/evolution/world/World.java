@@ -28,21 +28,23 @@ public class World {
     }
 
     public void buildModel() {
-        CubeMesh mesh = new CubeMesh(80000);
+        CubeMesh mesh = new CubeMesh(80000 * 2);
         for (int x = 0; x < length; x++) {
             for (int z = 0; z < depth; z++) {
                 Vector3f pos = new Vector3f(x, 0, z);
                 Vector3f color = getColor(x, z);
-                Vector3f colorA = new Vector3f(color).mul(0.8f);
-                Vector3f colorB = new Vector3f(color).mul(0.75f);
+                Vector3f colorA = new Vector3f(color).mul(0.6f);
+                Vector3f colorB = new Vector3f(color).mul(0.3f);
 
-                if (shouldRenderFace(x, z, x + 1, z)) mesh.putFace(pos, colorA, CubeFace.PosX);
-                if (shouldRenderFace(x, z, x, z + 1)) mesh.putFace(pos, colorB, CubeFace.PosZ);
-                if (shouldRenderFace(x, z, x - 1, z)) mesh.putFace(pos, colorA, CubeFace.NegX);
-                if (shouldRenderFace(x, z, x, z - 1)) mesh.putFace(pos, colorB, CubeFace.NegZ);
+                float height = getTile(x,z) == Tile.WATER ? 0.6f : 1.0f;
 
-                mesh.putFace(pos, color, CubeFace.PosY);
-                mesh.putFace(pos, color, CubeFace.NegY);
+                if (shouldRenderFace(x, z, x + 1, z)) mesh.putFace(pos, colorA, CubeFace.PosX, height);
+                if (shouldRenderFace(x, z, x, z + 1)) mesh.putFace(pos, colorB, CubeFace.PosZ, height);
+                if (shouldRenderFace(x, z, x - 1, z)) mesh.putFace(pos, colorA, CubeFace.NegX, height);
+                if (shouldRenderFace(x, z, x, z - 1)) mesh.putFace(pos, colorB, CubeFace.NegZ, height);
+
+                mesh.putFace(pos, color, CubeFace.PosY, height);
+                mesh.putFace(pos, color, CubeFace.NegY, height);
             }
         }
 
@@ -63,7 +65,11 @@ public class World {
     }
 
     private byte getTile(int x, int z) {
-        return data[z * 4 + x];
+        return data[z * depth + x];
+    }
+
+    void setTile(int x, int z, byte tile) {
+        data[z * depth + x] = tile;
     }
 
     private Vector3f getColor(int x, int z) {
@@ -83,5 +89,11 @@ public class World {
         return new Vector3f(r / 255.0f, g / 255.0f, b / 255.0f);
     }
 
+    int getLength() {
+        return length;
+    }
 
+    int getDepth() {
+        return depth;
+    }
 }

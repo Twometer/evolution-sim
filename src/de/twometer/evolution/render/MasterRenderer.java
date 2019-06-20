@@ -5,6 +5,7 @@ import de.twometer.evolution.gl.GameWindow;
 import de.twometer.evolution.gl.ILifecycle;
 import de.twometer.evolution.shaders.MainShader;
 import de.twometer.evolution.world.World;
+import de.twometer.evolution.world.WorldGenerator;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -32,7 +33,11 @@ public class MasterRenderer implements ILifecycle {
         camera = new Camera();
         mainShader = new MainShader();
 
-        world = new World(64, 64);
+        world = new World(96, 96);
+
+        WorldGenerator generator = new WorldGenerator(world);
+        generator.generate();
+
         world.buildModel();
 
         glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
@@ -47,7 +52,7 @@ public class MasterRenderer implements ILifecycle {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
             mainShader.bind();
-            mainShader.setModelMatrix(new Matrix4f().identity());
+            mainShader.setModelMatrix(new Matrix4f().scale(0.5f));
             mainShader.setViewMatrix(camera.calcViewMatrix());
             mainShader.setProjectionMatrix(new Matrix4f().perspective((float) Math.toRadians(70f), (float) gameWindow.getWidth() / gameWindow.getHeight(), 0.1f, 500.0f));
 
