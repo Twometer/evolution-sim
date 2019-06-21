@@ -65,6 +65,8 @@ public class MasterRenderer implements ILifecycle {
 
             world.render();
 
+            Context.getInstance().getModels().draw("crab.obj");
+
             handleControls();
 
             gameWindow.update();

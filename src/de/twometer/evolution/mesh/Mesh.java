@@ -10,13 +10,23 @@ public class Mesh {
 
     private FloatBuffer colors;
 
+    private FloatBuffer normals;
+
     private int vertexCount;
 
     private int colorCount;
 
-    public Mesh(int vertexCapacity) {
+    private int normalCount;
+
+    Mesh(int vertexCapacity) {
+        this(vertexCapacity, false);
+    }
+
+    public Mesh(int vertexCapacity, boolean hasNormals) {
         vertices = MemoryUtil.memAllocFloat(vertexCapacity * 3);
         colors = MemoryUtil.memAllocFloat(vertexCapacity * 3);
+        if (hasNormals)
+            normals = MemoryUtil.memAllocFloat(vertexCapacity * 3);
     }
 
     public void putVertex(float x, float y, float z) {
@@ -33,12 +43,23 @@ public class Mesh {
         colorCount++;
     }
 
+    public void putNormal(float x, float y, float z) {
+        normals.put(x);
+        normals.put(y);
+        normals.put(z);
+        normalCount++;
+    }
+
     int getVertexCount() {
         return vertexCount;
     }
 
     int getColorCount() {
         return colorCount;
+    }
+
+    int getNormalCount() {
+        return normalCount;
     }
 
     FloatBuffer getVertices() {
@@ -49,9 +70,14 @@ public class Mesh {
         return colors;
     }
 
+    FloatBuffer getNormals() {
+        return normals;
+    }
+
     public void destroy() {
         MemoryUtil.memFree(vertices);
         MemoryUtil.memFree(colors);
+        MemoryUtil.memFree(normals);
     }
 
 }
