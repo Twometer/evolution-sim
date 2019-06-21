@@ -2,7 +2,8 @@ package de.twometer.evolution.shaders;
 
 import de.twometer.evolution.res.Loader;
 
-import static org.lwjgl.opengl.GL20.*;
+import static org.lwjgl.opengl.GL20.glDeleteProgram;
+import static org.lwjgl.opengl.GL20.glUseProgram;
 
 public abstract class Shader {
 
@@ -12,8 +13,8 @@ public abstract class Shader {
     private int programId;
 
     Shader(String name) {
-        String vertexPath = name + VERT_SHADER_EXT;
-        String fragmentPath = name + FRAG_SHADER_EXT;
+        String vertexPath = "shaders/" + name + VERT_SHADER_EXT;
+        String fragmentPath = "shaders/" + name + FRAG_SHADER_EXT;
         programId = Loader.loadShader(vertexPath, fragmentPath);
         initialize();
         System.out.printf("Loaded shader '%s'%n", name);
