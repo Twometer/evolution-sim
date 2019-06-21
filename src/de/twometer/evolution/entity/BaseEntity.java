@@ -5,6 +5,8 @@ import org.joml.Vector3f;
 
 public abstract class BaseEntity {
 
+    private boolean isDead;
+
     Vector3f position;
 
     float rotation;
@@ -17,6 +19,11 @@ public abstract class BaseEntity {
 
     void die() {
         Context.getInstance().getWorld().getEntities().remove(this);
+        isDead = true;
+    }
+
+    boolean isDead() {
+        return isDead;
     }
 
     public BaseEntity setPosition(Vector3f position) {

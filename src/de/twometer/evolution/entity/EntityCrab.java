@@ -62,10 +62,8 @@ public class EntityCrab extends EntityLiving {
     @Override
     public void tick() {
         age++;
-
-
-        hunger += lerp(0.001f, 0.005f, random.nextFloat()) * getDna().getGene(SPEED).getValue();
-        thirst += lerp(0.001f, 0.005f, random.nextFloat()) * getDna().getGene(SPEED).getValue();
+        hunger += lerp(0.0010f, 0.005f, random.nextFloat()) * getDna().getGene(SPEED).getValue();
+        thirst += lerp(0.0015f, 0.005f, random.nextFloat()) * getDna().getGene(SPEED).getValue();
 
         if (pregnantTicks >= 0)
             pregnantTicks++;
@@ -110,10 +108,10 @@ public class EntityCrab extends EntityLiving {
                 }
                 break;
             case SearchMate:
-                if (hunger > reproductiveUrge || thirst > reproductiveUrge)
-                    state = State.Idle;
-
                 if (!hasTarget()) {
+                    if (hunger > reproductiveUrge || thirst > reproductiveUrge)
+                        state = State.Idle;
+
                     EntityCrab closestMate = findClosestEntity(EntityCrab.class, e -> e.getGender() == Gender.Female);
                     if (closestMate != null) {
                         boolean mated = closestMate.requestMating(this);
@@ -134,6 +132,9 @@ public class EntityCrab extends EntityLiving {
                 if (matingTicks > 30) {
                     state = State.Idle;
                 }
+                break;
+            case Waiting:
+                if (matingTarget.isDead()) state = State.Idle;
                 break;
         }
 
