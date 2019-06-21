@@ -134,6 +134,7 @@ public class EntityCrab extends EntityLiving {
                 matingTicks++;
                 if (matingTicks > 30) {
                     state = State.Idle;
+                    matingTarget.state = State.Idle;
                 }
                 break;
             case Waiting:
