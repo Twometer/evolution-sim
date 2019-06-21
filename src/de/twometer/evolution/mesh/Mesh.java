@@ -14,19 +14,19 @@ public class Mesh {
 
     private int colorCount;
 
-    Mesh(int vertexCapacity) {
+    public Mesh(int vertexCapacity) {
         vertices = MemoryUtil.memAllocFloat(vertexCapacity * 3);
         colors = MemoryUtil.memAllocFloat(vertexCapacity * 3);
     }
 
-    void putVertex(float x, float y, float z) {
+    public void putVertex(float x, float y, float z) {
         vertices.put(x);
         vertices.put(y);
         vertices.put(z);
         vertexCount++;
     }
 
-    void putColor(float r, float g, float b) {
+    public void putColor(float r, float g, float b) {
         colors.put(r);
         colors.put(g);
         colors.put(b);

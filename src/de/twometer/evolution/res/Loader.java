@@ -1,5 +1,9 @@
 package de.twometer.evolution.res;
 
+import de.twometer.evolution.mesh.Mesh;
+import de.twometer.evolution.mesh.Model;
+import de.twometer.evolution.obj.WavefrontParser;
+
 import java.io.IOException;
 
 import static org.lwjgl.opengl.GL20.*;
@@ -36,6 +40,18 @@ public class Loader {
             glDeleteShader(fragmentShaderId);
 
             return programId;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static Model loadObj(String model) {
+        WavefrontParser parser = new WavefrontParser("models/", model);
+        try {
+            Mesh mesh = parser.createMesh();
+            Model mdl = Model.create(mesh, GL_TRIANGLES);
+            mesh.destroy();
+            return mdl;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

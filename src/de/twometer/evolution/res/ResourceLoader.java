@@ -36,7 +36,7 @@ public class ResourceLoader {
      * @return A reader on the content stream of the file
      * @throws IOException Will be thrown if the file does not exist
      */
-    private static InputStreamReader openReader(String path) throws IOException {
+    public static InputStreamReader openReader(String path) throws IOException {
         return new InputStreamReader(openStream(path), StandardCharsets.UTF_8);
     }
 
