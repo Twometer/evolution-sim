@@ -20,7 +20,7 @@ public class ResourceLoader {
      * @return The contents of the file
      * @throws IOException Will be thrown if the file does not exist, or the reading fails for any other reason.
      */
-    static String loadString(String path) throws IOException {
+    public static String loadString(String path) throws IOException {
         BufferedReader reader = new BufferedReader(openReader(path));
         StringBuilder builder = new StringBuilder();
         String line;
@@ -47,7 +47,7 @@ public class ResourceLoader {
      * @return The image
      * @throws IOException Will be thrown if the file does not exist, or the image decoding fails
      */
-    public static BufferedImage loadImage(String path) throws IOException {
+    static BufferedImage loadImage(String path) throws IOException {
         return ImageIO.read(openStream(path));
     }
 

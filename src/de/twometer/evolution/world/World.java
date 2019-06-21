@@ -59,7 +59,7 @@ public class World {
             }
         }
 
-        this.model = Model.create(mesh, GL_TRIANGLES);
+        this.model = Model.create3d(mesh, GL_TRIANGLES);
     }
 
     public void render() {

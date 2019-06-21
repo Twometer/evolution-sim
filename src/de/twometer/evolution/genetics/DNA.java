@@ -19,7 +19,7 @@ public class DNA {
         return genes.get(id);
     }
 
-    Map<String, Gene> getGenes() {
+    public Map<String, Gene> getGenes() {
         return genes;
     }
 }

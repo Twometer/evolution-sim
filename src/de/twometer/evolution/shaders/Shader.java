@@ -36,7 +36,7 @@ public abstract class Shader {
     /**
      * Unbinds the shader program
      */
-    private void unbind() {
+    public void unbind() {
         glUseProgram(0);
     }
 

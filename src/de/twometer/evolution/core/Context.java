@@ -16,6 +16,8 @@ public class Context implements ILifecycle {
 
     private Matrix4f projectionMatrix;
 
+    private Matrix4f guiMatrix = new Matrix4f();
+
     public static Context getInstance() {
         return instance;
     }
@@ -50,6 +52,10 @@ public class Context implements ILifecycle {
 
     public void setProjectionMatrix(Matrix4f projectionMatrix) {
         this.projectionMatrix = projectionMatrix;
+    }
+
+    public Matrix4f getGuiMatrix() {
+        return guiMatrix;
     }
 
     @Override

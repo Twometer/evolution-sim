@@ -2,9 +2,12 @@ package de.twometer.evolution.render;
 
 import de.twometer.evolution.core.Context;
 import de.twometer.evolution.core.ILifecycle;
+import de.twometer.evolution.core.LifecycleManager;
 import de.twometer.evolution.entity.BaseEntity;
 import de.twometer.evolution.entity.EntityCrab;
+import de.twometer.evolution.font.FontRenderer;
 import de.twometer.evolution.genetics.Gender;
+import de.twometer.evolution.genetics.Gene;
 import de.twometer.evolution.gl.Camera;
 import de.twometer.evolution.gl.GameWindow;
 import de.twometer.evolution.shaders.MainShader;
@@ -13,6 +16,12 @@ import de.twometer.evolution.world.WorldGenerator;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
+import org.joml.Vector4f;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
@@ -65,6 +74,12 @@ public class MasterRenderer implements ILifecycle {
 
     public void render() {
         long lastTick = System.currentTimeMillis();
+        FontRenderer renderer = new FontRenderer("lucida");
+        LifecycleManager.initialize(renderer);
+
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
         while (!gameWindow.isCloseRequested()) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -73,6 +88,8 @@ public class MasterRenderer implements ILifecycle {
 
             Matrix4f projMatrix = new Matrix4f().perspective((float) Math.toRadians(70f), (float) gameWindow.getWidth() / gameWindow.getHeight(), 0.1f, 500.0f);
             Context.getInstance().setProjectionMatrix(projMatrix);
+
+            Context.getInstance().getGuiMatrix().setOrtho2D(0.0f, gameWindow.getWidth(), gameWindow.getHeight(), 0.0f);
 
             mainShader.bind();
             mainShader.setModelMatrix(new Matrix4f().scale(1.0f));
@@ -90,6 +107,53 @@ public class MasterRenderer implements ILifecycle {
                 for (BaseEntity entity : world.getEntities()) entity.tick();
                 lastTick = System.currentTimeMillis();
             }
+
+            int total = 0;
+            int males = 0;
+            int females = 0;
+
+            Map<String, Float> averageGenes = new HashMap<>();
+
+            for (BaseEntity entity : world.getEntities()) {
+                if (entity instanceof EntityCrab) {
+                    EntityCrab crab = (EntityCrab) entity;
+                    total++;
+                    if (crab.getGender() == Gender.Male) males++;
+                    else females++;
+
+                    for (Map.Entry<String, Gene> gene : crab.getDna().getGenes().entrySet()) {
+                        if (averageGenes.containsKey(gene.getKey()))
+                            averageGenes.put(gene.getKey(), averageGenes.get(gene.getKey()) + gene.getValue().getValue());
+                        else
+                            averageGenes.put(gene.getKey(), gene.getValue().getValue());
+                    }
+                }
+            }
+
+            glDisable(GL_DEPTH_TEST);
+            List<String> lines = new ArrayList<>();
+            lines.add("Population: " + total);
+            lines.add("Males: " + males);
+            lines.add("Females: " + females);
+
+            for (Map.Entry<String, Float> gene : averageGenes.entrySet()) {
+                lines.add(gene.getKey() + ": " + gene.getValue() / (float) total);
+            }
+
+
+            if (total == 0)
+                lines.add("SPECIES BECAME EXTINCT");
+            else if (females == 0 || males == 0)
+                lines.add("SPECIES DYING");
+
+            int y = 0;
+            for (String line : lines) {
+                renderer.draw(line, 10f, y, 0.35f, new Vector4f(1.0f, 1.0f, 1.0f, 1.0f));
+                y += 20;
+            }
+
+
+            glEnable(GL_DEPTH_TEST);
 
             handleControls();
 

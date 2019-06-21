@@ -45,7 +45,7 @@ public class WavefrontParser {
         int totalVertices = 0;
         for (WavefrontObject object : objects) totalVertices += object.getFaces().size() * 3;
 
-        Mesh mesh = new Mesh(totalVertices, true);
+        Mesh mesh = new Mesh(totalVertices).withNormals();
         for (WavefrontObject object : objects) {
             Material material = materialLib.getMaterial(object.getMaterial());
             Vector3f color = material.getDiffuseColor();

@@ -6,11 +6,15 @@ import java.nio.FloatBuffer;
 
 public class Mesh {
 
+    private int vertexCapacity;
+
     private FloatBuffer vertices;
 
     private FloatBuffer colors;
 
     private FloatBuffer normals;
+
+    private FloatBuffer texCoords;
 
     private int vertexCount;
 
@@ -18,21 +22,34 @@ public class Mesh {
 
     private int normalCount;
 
-    Mesh(int vertexCapacity) {
-        this(vertexCapacity, false);
-    }
+    private int texCoordCount;
 
-    public Mesh(int vertexCapacity, boolean hasNormals) {
+    public Mesh(int vertexCapacity) {
+        this.vertexCapacity = vertexCapacity;
         vertices = MemoryUtil.memAllocFloat(vertexCapacity * 3);
         colors = MemoryUtil.memAllocFloat(vertexCapacity * 3);
-        if (hasNormals)
-            normals = MemoryUtil.memAllocFloat(vertexCapacity * 3);
+    }
+
+    public Mesh withNormals() {
+        normals = MemoryUtil.memAllocFloat(vertexCapacity * 3);
+        return this;
+    }
+
+    public Mesh withTexCoords() {
+        texCoords = MemoryUtil.memAllocFloat(vertexCapacity * 3);
+        return this;
     }
 
     public void putVertex(float x, float y, float z) {
         vertices.put(x);
         vertices.put(y);
         vertices.put(z);
+        vertexCount++;
+    }
+
+    public void putVertex(float x, float y) {
+        vertices.put(x);
+        vertices.put(y);
         vertexCount++;
     }
 
@@ -50,12 +67,22 @@ public class Mesh {
         normalCount++;
     }
 
+    public void putTexCoord(float u, float v) {
+        texCoords.put(u);
+        texCoords.put(v);
+        texCoordCount++;
+    }
+
     int getVertexCount() {
         return vertexCount;
     }
 
     int getColorCount() {
         return colorCount;
+    }
+
+    int getTexCoordCount() {
+        return texCoordCount;
     }
 
     int getNormalCount() {
@@ -70,6 +97,10 @@ public class Mesh {
         return colors;
     }
 
+    FloatBuffer getTexCoords() {
+        return texCoords;
+    }
+
     FloatBuffer getNormals() {
         return normals;
     }
@@ -77,7 +108,8 @@ public class Mesh {
     public void destroy() {
         MemoryUtil.memFree(vertices);
         MemoryUtil.memFree(colors);
-        MemoryUtil.memFree(normals);
+        if (normals != null) MemoryUtil.memFree(normals);
+        if (texCoords != null) MemoryUtil.memFree(texCoords);
     }
 
 }
