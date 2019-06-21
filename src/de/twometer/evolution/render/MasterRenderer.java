@@ -140,15 +140,21 @@ public class MasterRenderer implements ILifecycle {
                 lines.add(gene.getKey() + ": " + gene.getValue() / (float) total);
             }
 
+            lines.add("");
 
             if (total == 0)
                 lines.add("SPECIES BECAME EXTINCT");
             else if (females == 0 || males == 0)
                 lines.add("SPECIES DYING");
+            else if (females <= 5 || males <= 5)
+                lines.add("SPECIES PROBABLY GOING EXTINCT");
+            else
+                lines.add("SPECIES IS HEALTHY");
 
             int y = 0;
             for (String line : lines) {
-                renderer.draw(line, 10f, y, 0.35f, new Vector4f(1.0f, 1.0f, 1.0f, 1.0f));
+                if (line.length() != 0)
+                    renderer.draw(line, 10f, y, 0.35f, new Vector4f(1.0f, 1.0f, 1.0f, 1.0f));
                 y += 20;
             }
 
