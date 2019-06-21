@@ -6,6 +6,7 @@ import de.twometer.evolution.mesh.Model;
 import de.twometer.evolution.res.Loader;
 import de.twometer.evolution.shaders.ModelShader;
 import org.joml.Matrix4f;
+import org.joml.Vector3f;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,11 +26,11 @@ public class Models implements ILifecycle {
         modelShader = new ModelShader();
     }
 
-    public void draw(String model) {
+    void draw(String model, Vector3f position, float rotation, float scale) {
         modelShader.bind();
         modelShader.setViewMatrix(Context.getInstance().getViewMatrix());
         modelShader.setProjectionMatrix(Context.getInstance().getProjectionMatrix());
-        modelShader.setModelMatrix(new Matrix4f().translate(0, 1, 2).scale(0.5f));
+        modelShader.setModelMatrix(new Matrix4f().translate(position).rotate(rotation, new Vector3f(0, 1, 0)).scale(scale));
         modelMap.get(model).draw();
     }
 

@@ -1,5 +1,10 @@
 package de.twometer.evolution.world;
 
+import de.twometer.evolution.entity.EntityPlant;
+import de.twometer.evolution.entity.EntityTree;
+import org.joml.Random;
+import org.joml.Vector3f;
+
 public class WorldGenerator {
 
     private World world;
@@ -8,10 +13,13 @@ public class WorldGenerator {
 
     private OpenSimplexNoise secondNoise;
 
+    private Random random;
+
     public WorldGenerator(World world) {
         this.world = world;
         this.noise = new OpenSimplexNoise(652132);
         this.secondNoise = new OpenSimplexNoise(123411);
+        this.random = new Random((long) (Math.random() * 83471));
     }
 
     public void generate() {
@@ -27,6 +35,22 @@ public class WorldGenerator {
                     world.setTile(x, z, Tile.SAND, (float) Math.abs(n));
                 else
                     world.setTile(x, z, Tile.GRASS, (float) Math.abs(n) / 6 * 5 + (float) Math.abs(n3) / 6 * 1 - offset);
+            }
+
+        populateEntities();
+    }
+
+    private void populateEntities() {
+        for (int x = 0; x < world.getLength(); x++)
+            for (int z = 0; z < world.getDepth(); z++) {
+                byte tile = world.getTile(x, z);
+                if (tile == Tile.GRASS) {
+                    if (random.nextFloat() > 0.99f)
+                        world.getEntities().add(new EntityTree().setPosition(new Vector3f(x, 1, z)));
+                    else if (random.nextFloat() > 0.99f)
+                        world.getEntities().add(new EntityPlant().setPosition(new Vector3f(x, 1, z)));
+                }
+
             }
     }
 

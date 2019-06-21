@@ -1,9 +1,13 @@
 package de.twometer.evolution.world;
 
+import de.twometer.evolution.entity.BaseEntity;
 import de.twometer.evolution.mesh.CubeFace;
 import de.twometer.evolution.mesh.CubeMesh;
 import de.twometer.evolution.mesh.Model;
 import org.joml.Vector3f;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
 
@@ -15,11 +19,17 @@ public class World {
     // Z Direction
     private int depth;
 
+    // Tile data
     private byte[] data;
 
+    // Noise data for smooth coloring
     private float[] offsets;
 
+    // Baked model
     private Model model;
+
+    // All the entities in this world
+    private List<BaseEntity> entities = new ArrayList<>();
 
     public World(int length, int depth) {
         this.length = length;
@@ -65,7 +75,7 @@ public class World {
         return getTile(mx, mz) != Tile.WATER && getTile(x, z) == Tile.WATER;
     }
 
-    private byte getTile(int x, int z) {
+    byte getTile(int x, int z) {
         int i = z * depth + x;
         if (i < 0 || i >= data.length)
             return 0;
@@ -88,44 +98,28 @@ public class World {
         int tile = getTile(x, z);
         switch (tile) {
             case Tile.SAND:
-                return rgb(255, 253, 125).sub(rgb(14, 51, 43).mul(1-getOffset(x,z)*2));
+                return rgb(255, 253, 125).sub(rgb(14, 51, 43).mul(1 - getOffset(x, z) * 2));
             case Tile.GRASS:
-                return rgb(124, 165, 52).sub(rgb(74, 39, -3).mul(getOffset(x,z)));
+                return rgb(124, 165, 52).sub(rgb(74, 39, -3).mul(getOffset(x, z)));
             case Tile.WATER:
-                return rgb(118, 192, 253).sub(rgb(26, 27, -1).mul(getOffset(x,z) * 3));
+                return rgb(118, 192, 253).sub(rgb(26, 27, -1).mul(getOffset(x, z) * 3));
         }
         return new Vector3f(0, 0, 0);
-    }
-
-    private float distToClosestTile(int x, int z, byte tile) {
-        float closestDistance = 8.5f;
-        for (int i = -6; i <= 6; i++) {
-            for (int j = -6; j <= 6; j++) {
-                int xo = i + x;
-                int zo = j + z;
-                float dst = distance(x, z, xo, zo);
-                if (dst < closestDistance && getTile(xo, zo) == tile)
-                    closestDistance = dst;
-            }
-        }
-        return closestDistance;
-    }
-
-    private float distance(int x1, int z1, int x2, int z2) {
-        int dx = x2 - x1;
-        int dy = z2 - z1;
-        return (float) Math.sqrt(dx * dx + dy * dy);
     }
 
     private Vector3f rgb(int r, int g, int b) {
         return new Vector3f(r / 255.0f, g / 255.0f, b / 255.0f);
     }
 
-    int getLength() {
+    public int getLength() {
         return length;
     }
 
-    int getDepth() {
+    public int getDepth() {
         return depth;
+    }
+
+    public List<BaseEntity> getEntities() {
+        return entities;
     }
 }

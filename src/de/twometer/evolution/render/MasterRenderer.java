@@ -2,6 +2,9 @@ package de.twometer.evolution.render;
 
 import de.twometer.evolution.core.Context;
 import de.twometer.evolution.core.ILifecycle;
+import de.twometer.evolution.entity.BaseEntity;
+import de.twometer.evolution.entity.EntityCrab;
+import de.twometer.evolution.genetics.Reproduction;
 import de.twometer.evolution.gl.Camera;
 import de.twometer.evolution.gl.GameWindow;
 import de.twometer.evolution.shaders.MainShader;
@@ -46,6 +49,12 @@ public class MasterRenderer implements ILifecycle {
 
         gameWindow.hideCursor();
         gameWindow.setCursorPosition(gameWindow.getWidth() / 2.0f, gameWindow.getHeight() / 2.0f);
+
+        for (int i = 0; i < 100; i++) {
+            EntityCrab crab = new EntityCrab(Reproduction.randomGender());
+            crab.setPosition(new Vector3f((float) Math.random() * world.getLength(), 1, (float) Math.random() * world.getDepth()));
+            world.getEntities().add(crab);
+        }
     }
 
     public void render() {
@@ -65,7 +74,10 @@ public class MasterRenderer implements ILifecycle {
 
             world.render();
 
-            Context.getInstance().getModels().draw("crab.obj");
+            for (BaseEntity entity : world.getEntities()) {
+                entity.render();
+                entity.update();
+            }
 
             handleControls();
 
