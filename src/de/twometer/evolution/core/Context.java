@@ -6,6 +6,8 @@ import org.joml.Matrix4f;
 
 public class Context implements ILifecycle {
 
+    public static final float SPEED_MODIIFIER = 1;
+
     private static Context instance = new Context();
 
     private World world;

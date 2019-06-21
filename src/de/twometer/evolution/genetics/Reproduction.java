@@ -29,8 +29,8 @@ public class Reproduction {
 
     private static float inherit(float a, float b) {
         float gene = random.nextDouble() < 0.5 ? a : b;
-        if (random.nextDouble() < 0.1) {
-            float mutateAmount = (float) random.nextGaussian() * 0.2f;
+        if (random.nextDouble() < 0.2) {
+            float mutateAmount = (float) random.nextGaussian() * 0.4f;
             gene += mutateAmount;
         }
         return gene;

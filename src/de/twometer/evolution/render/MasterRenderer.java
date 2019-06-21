@@ -5,6 +5,7 @@ import de.twometer.evolution.core.ILifecycle;
 import de.twometer.evolution.core.LifecycleManager;
 import de.twometer.evolution.entity.BaseEntity;
 import de.twometer.evolution.entity.EntityCrab;
+import de.twometer.evolution.entity.EntityPlant;
 import de.twometer.evolution.font.FontRenderer;
 import de.twometer.evolution.genetics.Gender;
 import de.twometer.evolution.genetics.Gene;
@@ -36,9 +37,13 @@ public class MasterRenderer implements ILifecycle {
 
     private World world;
 
+    private WorldGenerator worldGenerator;
+
     public MasterRenderer(GameWindow gameWindow) {
         this.gameWindow = gameWindow;
     }
+
+    private int timeSinceRegrowth;
 
     @Override
     public void create() {
@@ -48,8 +53,8 @@ public class MasterRenderer implements ILifecycle {
         world = new World(72, 72);
         Context.getInstance().setWorld(world);
 
-        WorldGenerator generator = new WorldGenerator(world);
-        generator.generate();
+        worldGenerator = new WorldGenerator(world);
+        worldGenerator.generate();
 
         world.buildModel();
 
@@ -59,7 +64,7 @@ public class MasterRenderer implements ILifecycle {
         gameWindow.hideCursor();
         gameWindow.setCursorPosition(gameWindow.getWidth() / 2.0f, gameWindow.getHeight() / 2.0f);
 
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 100; i++) {
 
             EntityCrab crab = new EntityCrab(Gender.Male);
             crab.setPosition(new Vector3f((float) Math.random() * world.getLength(), 1, (float) Math.random() * world.getDepth()));
@@ -103,12 +108,14 @@ public class MasterRenderer implements ILifecycle {
                 entity.update();
             }
 
-            if (System.currentTimeMillis() - lastTick > 100) {
+            if (System.currentTimeMillis() - lastTick > 100f / Context.SPEED_MODIIFIER) {
                 for (BaseEntity entity : world.getEntities()) entity.tick();
+                handleRegrowth();
                 lastTick = System.currentTimeMillis();
             }
 
             int total = 0;
+            int food = 0;
             int males = 0;
             int females = 0;
 
@@ -127,6 +134,8 @@ public class MasterRenderer implements ILifecycle {
                         else
                             averageGenes.put(gene.getKey(), gene.getValue().getValue());
                     }
+                } else if (entity instanceof EntityPlant) {
+                    food++;
                 }
             }
 
@@ -135,6 +144,7 @@ public class MasterRenderer implements ILifecycle {
             lines.add("Population: " + total);
             lines.add("Males: " + males);
             lines.add("Females: " + females);
+            lines.add("Food: " + food);
 
             for (Map.Entry<String, Float> gene : averageGenes.entrySet()) {
                 lines.add(gene.getKey() + ": " + gene.getValue() / (float) total);
@@ -165,6 +175,20 @@ public class MasterRenderer implements ILifecycle {
 
             gameWindow.update();
         }
+    }
+
+    private void handleRegrowth() {
+        int plants = 0;
+        for (BaseEntity entity : world.getEntities())
+            if (entity instanceof EntityPlant) plants++;
+
+        if (plants < 5 && timeSinceRegrowth > 100) {
+            worldGenerator.regrow();
+            timeSinceRegrowth = 0;
+        }
+
+        timeSinceRegrowth++;
+
     }
 
     private void handleControls() {

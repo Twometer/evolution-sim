@@ -1,5 +1,6 @@
 package de.twometer.evolution.entity;
 
+import de.twometer.evolution.core.Context;
 import de.twometer.evolution.genetics.DNA;
 import de.twometer.evolution.genetics.Gender;
 import de.twometer.evolution.util.Promise;
@@ -76,7 +77,7 @@ public abstract class EntityLiving extends BaseEntity {
 
         rotation = (float) (Math.atan2(diffNormalized.x, diffNormalized.z) + Math.PI / 2);
 
-        position.add(diffNormalized.mul(0.04f * speed));
+        position.add(diffNormalized.mul(0.04f * speed * Context.SPEED_MODIIFIER));
     }
 
     void stopMoving() {

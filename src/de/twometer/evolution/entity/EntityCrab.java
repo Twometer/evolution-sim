@@ -30,6 +30,7 @@ public class EntityCrab extends EntityLiving {
     private EntityCrab matingTarget;
     private int pregnantTicks = -1;
     private int matingTicks = 0;
+    private int waitingTicks = 0;
 
     private int age = 0;
 
@@ -114,12 +115,14 @@ public class EntityCrab extends EntityLiving {
 
                     EntityCrab closestMate = findClosestEntity(EntityCrab.class, e -> e.getGender() == Gender.Female);
                     if (closestMate != null) {
-                        boolean mated = closestMate.requestMating(this);
-                        if (mated)
+                        boolean accepted = closestMate.requestMating(this);
+                        if (accepted) {
+                            matingTarget = closestMate;
+                            state = State.Approaching;
                             moveTo(closestMate.position).then(() -> {
                                 state = State.Mating;
-                                matingTarget = closestMate;
                             });
+                        }
                     }
                 }
                 break;
@@ -134,8 +137,14 @@ public class EntityCrab extends EntityLiving {
                 }
                 break;
             case Waiting:
-                if (matingTarget.isDead()) state = State.Idle;
+                if (matingTarget == null || matingTarget.isDead()) state = State.Idle;
+                waitingTicks++;
                 break;
+        }
+
+        if (waitingTicks > 100) {
+            state = State.Idle;
+            waitingTicks = 0;
         }
 
         if (pregnantTicks > getDna().getGene(GESTATION_DURATION).getValue()) {
@@ -144,7 +153,7 @@ public class EntityCrab extends EntityLiving {
 
         System.out.println(getGender() + ", " + state + "; " + hunger + "; " + thirst + "; " + hasTarget() + "; " + pregnantTicks);
 
-        if (!hasTarget() && state != State.Waiting && state != State.Mating) {
+        if (!hasTarget() && state != State.Waiting && state != State.Mating && state != State.Approaching) {
             float range = getDna().getGene(SENSORY_DISTANCE).getValue();
             float dx = random(-range, range);
             float dz = random(-range, range);
@@ -217,6 +226,7 @@ public class EntityCrab extends EntityLiving {
             return false;
         stopMoving();
         state = State.Waiting;
+        matingTarget = father;
         return true;
     }
 
@@ -246,7 +256,8 @@ public class EntityCrab extends EntityLiving {
         SearchFood,
         SearchMate,
         Mating,
-        Waiting
+        Waiting,
+        Approaching
     }
 
 }
