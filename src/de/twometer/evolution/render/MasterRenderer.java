@@ -1,8 +1,9 @@
 package de.twometer.evolution.render;
 
+import de.twometer.evolution.core.Context;
+import de.twometer.evolution.core.ILifecycle;
 import de.twometer.evolution.gl.Camera;
 import de.twometer.evolution.gl.GameWindow;
-import de.twometer.evolution.gl.ILifecycle;
 import de.twometer.evolution.shaders.MainShader;
 import de.twometer.evolution.world.World;
 import de.twometer.evolution.world.WorldGenerator;
@@ -11,7 +12,6 @@ import org.joml.Vector2f;
 import org.joml.Vector3f;
 
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT_SHIFT;
 import static org.lwjgl.opengl.GL11.*;
 
 public class MasterRenderer implements ILifecycle {
@@ -34,6 +34,7 @@ public class MasterRenderer implements ILifecycle {
         mainShader = new MainShader();
 
         world = new World(72, 72);
+        Context.getInstance().setWorld(world);
 
         WorldGenerator generator = new WorldGenerator(world);
         generator.generate();
@@ -51,10 +52,16 @@ public class MasterRenderer implements ILifecycle {
         while (!gameWindow.isCloseRequested()) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+            Matrix4f viewMatrix = camera.calcViewMatrix();
+            Context.getInstance().setViewMatrix(viewMatrix);
+
+            Matrix4f projMatrix = new Matrix4f().perspective((float) Math.toRadians(70f), (float) gameWindow.getWidth() / gameWindow.getHeight(), 0.1f, 500.0f);
+            Context.getInstance().setProjectionMatrix(projMatrix);
+
             mainShader.bind();
             mainShader.setModelMatrix(new Matrix4f().scale(1.0f));
-            mainShader.setViewMatrix(camera.calcViewMatrix());
-            mainShader.setProjectionMatrix(new Matrix4f().perspective((float) Math.toRadians(70f), (float) gameWindow.getWidth() / gameWindow.getHeight(), 0.1f, 500.0f));
+            mainShader.setViewMatrix(viewMatrix);
+            mainShader.setProjectionMatrix(projMatrix);
 
             world.render();
 

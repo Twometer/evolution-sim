@@ -1,4 +1,4 @@
-package de.twometer.evolution.gl;
+package de.twometer.evolution.core;
 
 import java.util.ArrayList;
 import java.util.List;
