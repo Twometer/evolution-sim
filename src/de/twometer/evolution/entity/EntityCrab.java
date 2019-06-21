@@ -35,18 +35,23 @@ public class EntityCrab extends EntityLiving {
 
     public EntityCrab(Gender gender, DNA dna) {
         super(gender, dna);
-        model = gender == Gender.Male ? "crab.obj" : "crab-female.obj";
+        init();
     }
 
     public EntityCrab(Gender gender) {
         super(gender, new DNA());
-        model = gender == Gender.Male ? "crab.obj" : "crab-female.obj";
         getDna().registerGene(GESTATION_DURATION, 100.0f, Gender.Female);
         getDna().registerGene(SENSORY_DISTANCE, 24.0f);
         getDna().registerGene(REPRODUCTIVE_URGE, 0.4f);
         getDna().registerGene(SPEED, 1.0f);
-        getDna().registerGene(DESIRABILITY, 1.0f);
+        getDna().registerGene(DESIRABILITY, 0.5f);
+        init();
         age = 150;
+    }
+
+    private void init() {
+        model = getGender() == Gender.Male ? "crab.obj" : "crab-female.obj";
+        speed = getDna().getGene(SPEED).getValue();
     }
 
     @Override
@@ -56,7 +61,6 @@ public class EntityCrab extends EntityLiving {
 
     @Override
     public void tick() {
-
         age++;
 
 
@@ -205,7 +209,7 @@ public class EntityCrab extends EntityLiving {
     }
 
     private boolean requestMating(EntityCrab father) {
-        if (father.getGender() == getGender() || pregnantTicks != -1)
+        if (father.getGender() == getGender() || pregnantTicks != -1 || state == State.Waiting || state == State.Mating)
             return false;
         float chance = lerp(0.219f, 1f, father.getDna().getGene(DESIRABILITY).getValue());
         if (random.nextFloat() > chance)

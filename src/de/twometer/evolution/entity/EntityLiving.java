@@ -21,6 +21,8 @@ public abstract class EntityLiving extends BaseEntity {
 
     private Promise movePromise;
 
+    float speed = 1.0f;
+
     EntityLiving(Gender gender, DNA dna) {
         this.gender = gender;
         this.dna = dna;
@@ -60,7 +62,7 @@ public abstract class EntityLiving extends BaseEntity {
 
         Vector3f diff = new Vector3f(
                 target.x - position.x,
-                target.y - position.y,
+                0,
                 target.z - position.z
         );
         Vector3f diffNormalized = new Vector3f(diff).normalize();
@@ -74,7 +76,7 @@ public abstract class EntityLiving extends BaseEntity {
 
         rotation = (float) (Math.atan2(diffNormalized.x, diffNormalized.z) + Math.PI / 2);
 
-        position.add(diffNormalized.mul(0.04f));
+        position.add(diffNormalized.mul(0.04f * speed));
     }
 
     void stopMoving() {

@@ -50,17 +50,17 @@ public class MasterRenderer implements ILifecycle {
         gameWindow.hideCursor();
         gameWindow.setCursorPosition(gameWindow.getWidth() / 2.0f, gameWindow.getHeight() / 2.0f);
 
-        EntityCrab crab = new EntityCrab(Gender.Male);
-        crab.setPosition(new Vector3f((float) Math.random() * world.getLength(), 1, (float) Math.random() * world.getDepth()));
-        world.getEntities().add(crab);
+        for (int i = 0; i < 10; i++) {
 
-        EntityCrab crab2 = new EntityCrab(Gender.Female);
-        crab2.setPosition(new Vector3f((float) Math.random() * world.getLength(), 1, (float) Math.random() * world.getDepth()));
-        world.getEntities().add(crab2);
+            EntityCrab crab = new EntityCrab(Gender.Male);
+            crab.setPosition(new Vector3f((float) Math.random() * world.getLength(), 1, (float) Math.random() * world.getDepth()));
+            world.getEntities().add(crab);
 
-        /*for (int i = 0; i < 1; i++) {
+            EntityCrab crab2 = new EntityCrab(Gender.Female);
+            crab2.setPosition(new Vector3f((float) Math.random() * world.getLength(), 1, (float) Math.random() * world.getDepth()));
+            world.getEntities().add(crab2);
 
-        }*/
+        }
     }
 
     public void render() {
