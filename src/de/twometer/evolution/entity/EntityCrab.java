@@ -143,7 +143,7 @@ public class EntityCrab extends EntityLiving {
                 break;
         }
 
-        if (waitingTicks > 100) {
+        if (waitingTicks > 150) {
             state = State.Idle;
             waitingTicks = 0;
         }

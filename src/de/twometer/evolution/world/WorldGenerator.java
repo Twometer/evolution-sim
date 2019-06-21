@@ -58,7 +58,7 @@ public class WorldGenerator {
         for (int x = 0; x < world.getLength(); x++)
             for (int z = 0; z < world.getDepth(); z++) {
                 byte tile = world.getTile(x, z);
-                if (tile == Tile.GRASS && random.nextFloat() > 0.994f)
+                if (tile == Tile.GRASS && random.nextFloat() > 0.989f)
                     world.getEntities().add(new EntityPlant().setPosition(new Vector3f(x, 1, z)));
             }
     }
