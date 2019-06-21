@@ -13,7 +13,7 @@ import java.util.Map;
 
 public class Models implements ILifecycle {
 
-    private static final String[] MODELS = {"crab.obj", "plant.obj", "tree.obj"};
+    private static final String[] MODELS = {"crab.obj", "crab-female.obj", "plant.obj", "tree.obj"};
 
     private Map<String, Model> modelMap = new HashMap<>();
 

@@ -22,4 +22,9 @@ public class EntityTree extends BaseEntity {
 
     }
 
+    @Override
+    public void tick() {
+
+    }
+
 }

@@ -6,8 +6,8 @@ import de.twometer.evolution.mesh.CubeMesh;
 import de.twometer.evolution.mesh.Model;
 import org.joml.Vector3f;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
 
@@ -29,7 +29,7 @@ public class World {
     private Model model;
 
     // All the entities in this world
-    private List<BaseEntity> entities = new ArrayList<>();
+    private List<BaseEntity> entities = new CopyOnWriteArrayList<>();
 
     public World(int length, int depth) {
         this.length = length;
@@ -75,7 +75,7 @@ public class World {
         return getTile(mx, mz) != Tile.WATER && getTile(x, z) == Tile.WATER;
     }
 
-    byte getTile(int x, int z) {
+    public byte getTile(int x, int z) {
         int i = z * depth + x;
         if (i < 0 || i >= data.length)
             return 0;

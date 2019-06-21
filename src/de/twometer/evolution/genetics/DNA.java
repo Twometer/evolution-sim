@@ -1,6 +1,5 @@
 package de.twometer.evolution.genetics;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,8 +19,7 @@ public class DNA {
         return genes.get(id);
     }
 
-    public Collection<Gene> getGenes() {
-        return genes.values();
+    Map<String, Gene> getGenes() {
+        return genes;
     }
-
 }

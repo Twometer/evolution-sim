@@ -22,4 +22,9 @@ public class EntityPlant extends BaseEntity {
 
     }
 
+    @Override
+    public void tick() {
+
+    }
+
 }

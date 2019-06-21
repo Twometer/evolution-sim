@@ -2,6 +2,7 @@ package de.twometer.evolution.entity;
 
 import de.twometer.evolution.genetics.DNA;
 import de.twometer.evolution.genetics.Gender;
+import de.twometer.evolution.util.Promise;
 import org.joml.Vector3f;
 
 public abstract class EntityLiving extends BaseEntity {
@@ -18,6 +19,8 @@ public abstract class EntityLiving extends BaseEntity {
     private float yAccel = -0.0025f;
     private int groundTicks = 0;
 
+    private Promise movePromise;
+
     EntityLiving(Gender gender, DNA dna) {
         this.gender = gender;
         this.dna = dna;
@@ -27,13 +30,14 @@ public abstract class EntityLiving extends BaseEntity {
         return gender;
     }
 
-    DNA getDna() {
+    public DNA getDna() {
         return dna;
     }
 
-    public void moveTo(Vector3f target) {
+    Promise moveTo(Vector3f target) {
         this.target = target;
         this.hasTarget = true;
+        return (movePromise = new Promise());
     }
 
     @Override
@@ -41,15 +45,15 @@ public abstract class EntityLiving extends BaseEntity {
         if (!hasTarget) return;
 
         if (position.y <= 1) {
+            // on ground
             groundTicks++;
             if (groundTicks > 10) {
-                // on ground
                 yVel = 0.09f;
                 position.y = 1.001f;
             }
         } else {
-            groundTicks = 0;
             // not on ground
+            groundTicks = 0;
             position.y += yVel;
             yVel += yAccel;
         }
@@ -59,18 +63,25 @@ public abstract class EntityLiving extends BaseEntity {
                 target.y - position.y,
                 target.z - position.z
         );
+        Vector3f diffNormalized = new Vector3f(diff).normalize();
 
         float len = diff.length();
-        if (len < 0.1) {
+        if (len < 1) {
             hasTarget = false;
+            if (movePromise != null)
+                movePromise.resolve();
         }
 
-        rotation = (float) (Math.atan2(diff.z, diff.x));
+        rotation = (float) (Math.atan2(diffNormalized.x, diffNormalized.z) + Math.PI / 2);
 
-        position.add(diff.div(len).mul(0.04f));
+        position.add(diffNormalized.mul(0.04f));
     }
 
-    public boolean hasTarget() {
+    void stopMoving() {
+        hasTarget = false;
+    }
+
+    boolean hasTarget() {
         return hasTarget;
     }
 }
